@@ -96,17 +96,19 @@ const getFrameGroup = (event, outputPath) => ({
             ColorMetadata: 'INSERT',
             AfdSignaling: 'NONE',
             Sharpness: 100,
-            Height: event.frameHeight,
+            // Height: event.frameHeight,
+            Height: event.frameCaptureHeight,
             RespondToAfd: 'NONE',
             TimecodeInsertion: 'DISABLED',
-            Width: event.frameWidth,
+            // Width: event.frameWidth,
+            Width: event.frameCaptureWidth,
             ScalingBehavior: 'DEFAULT',
             AntiAlias: 'ENABLED',
             CodecSettings: {
                 FrameCaptureSettings: {
-                    MaxCaptures: 10000000,
+                    MaxCaptures: 5,
                     Quality: 80,
-                    FramerateDenominator: 5,
+                    FramerateDenominator: 30,
                     FramerateNumerator: 1
                 },
                 Codec: 'FRAME_CAPTURE'

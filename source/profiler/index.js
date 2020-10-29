@@ -58,15 +58,19 @@ exports.handler = async (event) => {
         event.encodingProfile = encodeProfile;
 
         if (event.frameCapture) {
-            // Match Height x Width with the encoding profile.
-            const ratios = {
-                '2160': 3840,
-                '1080': 1920,
-                '720': 1280
-            };
+            // // Match Height x Width with the encoding profile.
+            // const ratios = {
+            //     '2160': 3840,
+            //     '1080': 1920,
+            //     '720': 1280
+            // };
+            //
+            // event.frameCaptureHeight = encodeProfile;
+            // event.frameCaptureWidth = ratios[encodeProfile];
 
-            event.frameCaptureHeight = encodeProfile;
-            event.frameCaptureWidth = ratios[encodeProfile];
+            // static
+            event.frameCaptureHeight = 270;
+            event.frameCaptureWidth = 480;
         }
 
         // Update:: added support to pass in a custom encoding Template instead of using the
