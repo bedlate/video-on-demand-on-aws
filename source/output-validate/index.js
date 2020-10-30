@@ -27,6 +27,7 @@ exports.handler = async (event) => {
   const s3 = new AWS.S3();
 
   let data = {};
+  let info = {};
 
   try {
   // Get Config from DynamoDB (data required for the workflow)
@@ -53,11 +54,31 @@ exports.handler = async (event) => {
       data.hlsPlaylist = output.playlistFilePaths[0];
       data.hlsUrl = `https://${data.cloudFront}/${buildUrl(data.hlsPlaylist)}`;
 
+      // change output for hls
+      info.hls = {
+        index: buildUrl(output.playlistFilePaths[0]),
+        details: {},
+      };
+      for (let item of output.outputDetails) {
+        info.duration = item.durationInMs;
+        info.hls.details[item.videoDetails.heightInPx] = buildUrl(item.outputFilePaths[0]);
+      }
+
       break;
 
     case 'DASH_ISO_GROUP':
       data.dashPlaylist = output.playlistFilePaths[0];
       data.dashUrl = `https://${data.cloudFront}/${buildUrl(data.dashPlaylist)}`;
+
+      // // change output for dash
+      // info.dash = {
+      //   index: buildUrl(output.playlistFilePaths[0]),
+      //   details: {},
+      // };
+      // for (let item of output.outputDetails) {
+      //   info.duration = item.durationInMs;
+      //   info.dash.details[item.videoDetails.heightInPx] = buildUrl(item.outputFilePaths[0]);
+      // }
 
       break;
 
@@ -92,6 +113,15 @@ exports.handler = async (event) => {
       data.cmafHlsPlaylist = output.playlistFilePaths[1];
       data.cmafHlsUrl = `https://${data.cloudFront}/${buildUrl(data.cmafHlsPlaylist)}`;
 
+      // // change output for dash and hls, no outputFilePaths for 360p or 720p...
+      // info.duration = output.outputDetails[0]['durationInMs'];
+      // info.dash = {
+      //   index: buildUrl(output.playlistFilePaths[0]),
+      // };
+      // info.hls = {
+      //   index: buildUrl(output.playlistFilePaths[1]),
+      // };
+
       break;
 
     default:
@@ -115,13 +145,24 @@ exports.handler = async (event) => {
 
     let thumbNails = await s3.listObjects(params).promise();
 
+    info.thumbs = [];
     if (thumbNails.Contents.legnth !=0) {
+      // get all thumbs
+      for (let item of thumbNails.Contents) {
+        info.thumbs.push(item.Key);
+      }
+
       let lastImg = thumbNails.Contents.pop();
       data.thumbNails.push(`s3://${data.destBucket}/${lastImg.Key}`);
       data.thumbNailsUrls.push(`https://${data.cloudFront}/${lastImg.Key}`);
     } else {
         throw new Error('MediaConvert Thumbnails not found in S3');
     }
+
+    info.source_key = data.srcVideo;
+    info.status = data.workflowStatus;
+
+    data.info = info;
     
   }
 

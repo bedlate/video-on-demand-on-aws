@@ -42,21 +42,22 @@ exports.handler = async (event) => {
         let subject = 'Workflow Status:: ' + event.workflowStatus + ':: ' + event.guid;
 
         if (event.workflowStatus === 'Complete') {
-            msg = event;
-            delete msg.srcMediainfo;
-            delete msg.jobTemplate_2160p;
-            delete msg.jobTemplate_1080p;
-            delete msg.jobTemplate_720p;
-            delete msg.encodingJob;
-            delete msg.encodingOutput;
-
-            if (event.enableMediaPackage) {
-                /*
-                    If MediaPackage VOD is enabled, some properties can be removed from the final output.
-                    They're still saved in DynamoDB, but are not included in the notification.
-                */
-                NOT_APPLICABLE_PROPERTIES.forEach(prop => delete msg[prop]);
-            }
+            // msg = event;
+            // delete msg.srcMediainfo;
+            // delete msg.jobTemplate_2160p;
+            // delete msg.jobTemplate_1080p;
+            // delete msg.jobTemplate_720p;
+            // delete msg.encodingJob;
+            // delete msg.encodingOutput;
+            //
+            // if (event.enableMediaPackage) {
+            //     /*
+            //         If MediaPackage VOD is enabled, some properties can be removed from the final output.
+            //         They're still saved in DynamoDB, but are not included in the notification.
+            //     */
+            //     NOT_APPLICABLE_PROPERTIES.forEach(prop => delete msg[prop]);
+            // }
+            msg = event.info;
         } else if (event.workflowStatus === 'Ingest') {
             msg = {
                 status: event.workflowStatus,
