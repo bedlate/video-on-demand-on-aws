@@ -95,7 +95,7 @@ const getFrameGroup = (event, outputPath) => ({
         VideoDescription: {
             ColorMetadata: 'INSERT',
             AfdSignaling: 'NONE',
-            Sharpness: 100,
+            Sharpness: 50,                 // 清晰度，50针对大部分设置
             // Height: event.frameHeight,
             Height: event.frameCaptureHeight,
             RespondToAfd: 'NONE',
@@ -106,10 +106,10 @@ const getFrameGroup = (event, outputPath) => ({
             AntiAlias: 'ENABLED',
             CodecSettings: {
                 FrameCaptureSettings: {
-                    MaxCaptures: 5,
-                    Quality: 80,
-                    FramerateDenominator: 30,
-                    FramerateNumerator: 1
+                    MaxCaptures: 20,            // 最大抓取数量
+                    Quality: 80,                // 质量
+                    FramerateDenominator: 120,  // 多少帧抓取一次
+                    FramerateNumerator: 1       // 每帧秒数
                 },
                 Codec: 'FRAME_CAPTURE'
             },
